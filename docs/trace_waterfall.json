@@ -1,29 +1,167 @@
 [
   {
     "step": 1,
-    "query": "Chào bạn, bạn có thể giới thiệu quy chế học vụ cơ bản của Đại học VinUni không?",
+    "query": "Chào bạn, trạm dịch vụ VinFast nhận bảo dưỡng những dòng xe máy điện nào và có những gói dịch vụ gì?",
     "action_type": "FINAL_ANSWER",
-    "thought": "Câu hỏi chung về quy chế học vụ, trả lời trực tiếp không cần gọi Tool.",
-    "output": "[Mock Agent Response]: Xin chào! Quy chế học vụ VinUni yêu cầu sinh viên tích lũy tối thiểu 120 tín chỉ và duy trì GPA trên 2.0 để tốt nghiệp.",
-    "latency_ms": 2845.93
+    "thought": "OpenAI phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
+    "output": "Xin chào!  \n\n**Các dòng xe máy điện được trạm dịch vụ VinFast bảo dưỡng:**\n\n| Dòng xe | Đặc tả chính |\n|--------|--------------|\n| **VF Cruise** | Xe máy điện 125cc, quang âm khoảng 65 km (đối với phiên bản ĐT‑125). |\n| **VF Venture** | Xe máy điện 125cc, quang âm khoảng 30–35 km (đối với phiên bản ĐT‑125). |\n\nHiện tại, trạm dịch vụ vẫn chính tập trung vào hai dòng trên (VD 125 ĐT). Nếu bạn đang sử dụng các model cũ hơn hoặc phát hành lộp mới, xin vui lòng nhắc lại biển số xe để chúng tôi xác nhận thêm.\n\n---\n\n**Các gói dịch vụ bảo dưỡng tiêu chuẩn tại trạm VinFast (có thể điều chỉnh tùy nhu cầu của bạn):**\n\n| Gói | Nội dung chính |\n|-----|----------------|\n| **Bảo dưỡng cơ bản** | Kiểm tra & thay dầu (nếu cần), trạng thái lốp, số nano, khung, hệ thống đèn, khớp, an toàn cơ bản, kiểm tra hệ thống sạc và pin (đánh giá sức khỏe). |\n| **Bảo dưỡng mở rộng** | Bao gồm toàn bộ tính năng của gói cơ bản **bên cạnh đó** kiểm tra và mở hoặc thay lại pin giao diện, bảo dưỡng bộ sạc, làm sạch điện tử, và kiểm tra hệ thống GPS (nếu có). |\n| **Bảo dưỡng toàn diện** | Bao gồm tất cả các yếu tố của gói mở rộng **thêm vào đó** cân chỉnh động cơ điện, kiểm tra hệ thống tràn lỏng nước (pumping), và thay sơn/lạnh băng (nếu cần). |\n| **Gói tùy chỉnh** | Dựa trên yêu cầu cụ thể của khách hàng (ví dụ: thay pin mới, cài đặt phần mềm firmware, độc lập với các gói chuẩn). |\n\n> **Lưu ý**: Gói, mức giá và các dịch vụ phụ trợ có thể thay đổi tùy theo từng **trạm dịch vụ** và từng **thời điểm**. Nếu bạn muốn biết mức giá cụ thể hoặc lịch trình thực tế, có thể gọi cho trạm gần nhất hoặc đặt lịch trực tuyến qua hệ thống đặt lịch (tôi có thể điều phối cho bạn).\n\n---\n\nNếu bạn cần **thông tin chi tiết hơn** (ví dụ: lịch bảo dưỡng, mức giá cụ thể, hay kiểm tra lịch sử của xe), vui lòng cung cấp biển số xe và chúng tôi sẽ tra cứu ngay!",
+    "latency_ms": 10721.01
   },
   {
     "step": 1,
-    "query": "Hãy tra cứu thông tin học vụ của sinh viên SV2026001.",
+    "query": "Hãy tra cứu lịch sử bảo dưỡng và tình trạng bảo hành của xe máy điện VinFast biển số 29MĐ1-12345.",
     "action_type": "TOOL_EXECUTION",
-    "tool_name": "academic_query",
+    "tool_name": "check_vehicle_history",
     "arguments": {
-      "student_id": "SV2026001"
+      "plate_number": "29MĐ1-12345"
     },
-    "observation": {},
-    "latency_ms": 799.12
+    "observation": {
+      "status": "SUCCESS",
+      "plate_number": "29MĐ1-12345",
+      "data": {
+        "model": "VinFast Evo200",
+        "vin": "VF-EVO200-000123",
+        "warranty_status": "Còn bảo hành đến 15/03/2027",
+        "battery_health": "92%",
+        "last_service_date": "10/06/2026",
+        "last_service_note": "Bảo dưỡng định kỳ, kiểm tra phanh và pin"
+      }
+    },
+    "latency_ms": 1387.7
   },
   {
     "step": 2,
-    "query": "Hãy tra cứu thông tin học vụ của sinh viên SV2026001.",
+    "query": "Hãy tra cứu lịch sử bảo dưỡng và tình trạng bảo hành của xe máy điện VinFast biển số 29MĐ1-12345.",
     "action_type": "FINAL_ANSWER",
-    "thought": "Tổng hợp kết quả từ MCP Server thành công.",
-    "output": "Chưa thể trả lời chi tiết do chưa nhận được dữ liệu từ MCP Server (hãy hoàn thành TODO 2.1).",
-    "latency_ms": 10.0
+    "thought": "OpenAI phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
+    "output": "✅ **Kết quả tra cứu biển số 29MĐ1-12345**\n\n| Thông tin | Giá trị |\n|-----------|---------|\n| **Mô hình xe** | VinFast Evo200 |\n| **VIN (Số Nhận dạng Khung xe)** | VF-EVO200-000123 |\n| **Tình trạng bảo hành** | Còn bảo hành đến **15/03/2027** |\n| **Tình trạng pin** | **92%** sức khỏe |\n| **Ngày bảo dưỡng gần nhất** | **10/06/2026** |\n| **Ghi chú bảo dưỡng** | Bảo dưỡng định kỳ, kiểm tra phanh và pin |\n\n> Nếu muốn đặt lịch bảo dưỡng sớm hơn, hoặc kiểm tra khung giờ trống của kỹ thuật viên, vui lòng cho biết thời gian và tên kỹ thuật viên mong muốn.",
+    "latency_ms": 3164.56
+  },
+  {
+    "step": 1,
+    "query": "Tôi muốn đặt lịch mang xe 29MĐ1-76623 vào trạm dịch vụ VinFast sửa lúc 9:00 sáng 20/09/2026 với kỹ thuật viên Trần Văn Hùng.",
+    "action_type": "TOOL_EXECUTION",
+    "tool_name": "book_service_appointment",
+    "arguments": {
+      "datetime_str": "9:00 20/09/2026",
+      "plate_number": "29MĐ1-76623",
+      "technician_name": "Trần Văn Hùng"
+    },
+    "observation": {
+      "status": "SUCCESS",
+      "booking_id": "BK-29MĐ1-76623-TRẦ",
+      "plate_number": "29MĐ1-76623",
+      "datetime": "9:00 20/09/2026",
+      "technician_name": "Trần Văn Hùng",
+      "message": "Đặt lịch thành công cho xe 29MĐ1-76623 với kỹ thuật viên Trần Văn Hùng vào lúc 9:00 20/09/2026."
+    },
+    "latency_ms": 2287.59
+  },
+  {
+    "step": 2,
+    "query": "Tôi muốn đặt lịch mang xe 29MĐ1-76623 vào trạm dịch vụ VinFast sửa lúc 9:00 sáng 20/09/2026 với kỹ thuật viên Trần Văn Hùng.",
+    "action_type": "FINAL_ANSWER",
+    "thought": "OpenAI phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
+    "output": "✅ **Đặt lịch thành công**  \n- **Xe**: 29MĐ1-76623  \n- **Thời gian**: 9:00 sáng, 20/09/2026  \n- **Kỹ thuật viên**: Trần Văn Hùng  \n- **Mã đặt lịch**: BK‑29MĐ1‑76623‑TRẦ  \n\nBạn được nêu rõ lịch hẹn. Nếu cần điều chỉnh hay thêm thông tin, xin vui lòng cho biết!",
+    "latency_ms": 2548.48
+  },
+  {
+    "step": 1,
+    "query": "Xe 29MĐ1-76623 của tôi còn bảo hành pin không, và nếu khung giờ 9:00 sáng 20/09/2026 tại trạm dịch vụ còn trống thì đặt lịch sửa luôn giúp tôi.",
+    "action_type": "TOOL_EXECUTION",
+    "tool_name": "check_vehicle_history",
+    "arguments": {
+      "plate_number": "29MĐ1-76623"
+    },
+    "observation": {
+      "status": "SUCCESS",
+      "plate_number": "29MĐ1-76623",
+      "data": {
+        "model": "VinFast Feliz S",
+        "vin": "VF-FELIZS-000988",
+        "warranty_status": "Hết bảo hành từ 01/01/2026",
+        "battery_health": "78%",
+        "last_service_date": "02/02/2026",
+        "last_service_note": "Thay lốp trước, kiểm tra hệ thống điện"
+      }
+    },
+    "latency_ms": 2593.59
+  },
+  {
+    "step": 2,
+    "query": "Xe 29MĐ1-76623 của tôi còn bảo hành pin không, và nếu khung giờ 9:00 sáng 20/09/2026 tại trạm dịch vụ còn trống thì đặt lịch sửa luôn giúp tôi.",
+    "action_type": "TOOL_EXECUTION",
+    "tool_name": "check_slot_availability",
+    "arguments": {
+      "date_str": "20/09/2026",
+      "technician_name": ""
+    },
+    "observation": {
+      "status": "SUCCESS",
+      "date": "20/09/2026",
+      "available_slots_by_technician": {
+        "Trần Văn Hùng": [
+          "8:00",
+          "10:30",
+          "14:00"
+        ],
+        "Lê Thị Mai": [
+          "9:00",
+          "13:00",
+          "15:30"
+        ]
+      }
+    },
+    "latency_ms": 3356.18
+  },
+  {
+    "step": 3,
+    "query": "Xe 29MĐ1-76623 của tôi còn bảo hành pin không, và nếu khung giờ 9:00 sáng 20/09/2026 tại trạm dịch vụ còn trống thì đặt lịch sửa luôn giúp tôi.",
+    "action_type": "TOOL_EXECUTION",
+    "tool_name": "book_service_appointment",
+    "arguments": {
+      "datetime_str": "9:00 20/09/2026",
+      "plate_number": "29MĐ1-76623",
+      "technician_name": "Lê Thị Mai"
+    },
+    "observation": {
+      "status": "SUCCESS",
+      "booking_id": "BK-29MĐ1-76623-LÊ ",
+      "plate_number": "29MĐ1-76623",
+      "datetime": "9:00 20/09/2026",
+      "technician_name": "Lê Thị Mai",
+      "message": "Đặt lịch thành công cho xe 29MĐ1-76623 với kỹ thuật viên Lê Thị Mai vào lúc 9:00 20/09/2026."
+    },
+    "latency_ms": 3073.55
+  },
+  {
+    "step": 4,
+    "query": "Xe 29MĐ1-76623 của tôi còn bảo hành pin không, và nếu khung giờ 9:00 sáng 20/09/2026 tại trạm dịch vụ còn trống thì đặt lịch sửa luôn giúp tôi.",
+    "action_type": "FINAL_ANSWER",
+    "thought": "OpenAI phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
+    "output": "- **Bảo hành pin**: Xe 29MĐ1‑76623 đã hết bảo hành (hết từ 01/01/2026).  \n- **Khung giờ 9:00 sáng 20/09/2026**: Vẫn trống, được chỉ định cho kỹ thuật viên **Lê Thị Mai**.  \n- **Lịch hẹn đã được đặt**:  \n  - *Ngày giờ*: 9:00 20/09/2026  \n  - *Kỹ thuật viên*: Lê Thị Mai  \n  - *Mã đặt lịch*: **BK-29MĐ1-76623-LÊ**  \n\nXin vui lòng kiểm tra lại thông tin và liên hệ với trạm dịch vụ nếu cần điều chỉnh.",
+    "latency_ms": 7393.79
+  },
+  {
+    "step": 1,
+    "query": "Hãy tra cứu lịch sử bảo dưỡng của xe máy điện biển số 99Z9-99999.",
+    "action_type": "TOOL_EXECUTION",
+    "tool_name": "check_vehicle_history",
+    "arguments": {
+      "plate_number": "99Z9-99999"
+    },
+    "observation": {
+      "status": "NOT_FOUND",
+      "message": "Không tìm thấy dữ liệu xe máy điện VinFast có biển số '99Z9-99999'"
+    },
+    "latency_ms": 1766.64
+  },
+  {
+    "step": 2,
+    "query": "Hãy tra cứu lịch sử bảo dưỡng của xe máy điện biển số 99Z9-99999.",
+    "action_type": "FINAL_ANSWER",
+    "thought": "OpenAI phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
+    "output": "Xin lỗi, hệ thống không thể tìm thấy dữ liệu cho xe máy điện VinFast có biển số **99Z9-99999**. Vui lòng kiểm tra lại biển số hoặc liên hệ với đội ngũ hỗ trợ để được hỗ trợ thêm.",
+    "latency_ms": 2596.39
   }
 ]

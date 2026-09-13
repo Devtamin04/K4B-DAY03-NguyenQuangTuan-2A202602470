@@ -36,28 +36,74 @@ class MockOfflineProvider(BaseLLMProvider):
 
     def generate_with_tools(self, prompt: str, tools_schema: List[Dict[str, Any]], system_prompt: str = "") -> Dict[str, Any]:
         prompt_lower = prompt.lower()
-        
-        # Mô phỏng nhận diện intent gọi Tool
-        if "sv2026001" in prompt_lower and "đặt lịch" in prompt_lower:
-            return {
-                "type": "tool_call",
-                "tool_name": "schedule_appointment",
-                "arguments": {"student_id": "SV2026001", "datetime_str": "14:00 15/09/2026", "advisor_name": "PGS.TS Nguyễn Văn A"},
-                "thought": "Người dùng yêu cầu đặt lịch hẹn tư vấn cho sinh viên SV2026001. Tôi sẽ gọi tool schedule_appointment."
-            }
-        elif "sv2026001" in prompt_lower or "tra cứu" in prompt_lower:
-            return {
-                "type": "tool_call",
-                "tool_name": "academic_query",
-                "arguments": {"student_id": "SV2026001"},
-                "thought": "Người dùng muốn tra cứu thông tin học vụ của sinh viên SV2026001. Tôi sẽ gọi tool academic_query."
-            }
-        else:
+
+        import re
+        plate_match = re.search(r"\d{2}[a-zA-ZÀ-ỹ]{1,3}\d?-\d{3,5}", prompt)
+        plate_number = plate_match.group(0) if plate_match else "29MĐ1-12345"
+
+        # Chỉ đếm Action đã thực thi trong "Lịch sử suy luận" (scratchpad), không tính câu hỏi gốc của người dùng
+        scratchpad = ""
+        if "[Lịch sử suy luận đã thực hiện]:" in prompt:
+            scratchpad = prompt.split("[Lịch sử suy luận đã thực hiện]:", 1)[1].lower()
+
+        history_done = "action: check_vehicle_history" in scratchpad
+        slot_checked = "action: check_slot_availability" in scratchpad
+        booking_done = "action: book_service_appointment" in scratchpad
+
+        wants_booking = "đặt lịch" in prompt_lower or "book" in prompt_lower
+        wants_history = "còn bảo hành" in prompt_lower or "bảo hành" in prompt_lower or "tra cứu" in prompt_lower
+
+        if booking_done:
             return {
                 "type": "text",
-                "content": f"[Mock Agent Response]: Xin chào! Quy chế học vụ VinUni yêu cầu sinh viên tích lũy tối thiểu 120 tín chỉ và duy trì GPA trên 2.0 để tốt nghiệp.",
-                "thought": "Câu hỏi chung về quy chế học vụ, trả lời trực tiếp không cần gọi Tool."
+                "content": "[Mock Agent Response]: Đã hoàn tất đặt lịch sửa xe cho bạn theo thông tin đã xác nhận ở bước trước.",
+                "thought": "Đã thực hiện xong Tool đặt lịch, tổng hợp câu trả lời cuối cùng cho khách hàng."
             }
+
+        if wants_booking and wants_history and not history_done:
+            return {
+                "type": "tool_call",
+                "tool_name": "check_vehicle_history",
+                "arguments": {"plate_number": plate_number},
+                "thought": f"Cần kiểm tra tình trạng bảo hành xe {plate_number} trước khi quyết định có đặt lịch hay không."
+            }
+
+        if wants_booking and wants_history and history_done and not slot_checked:
+            return {
+                "type": "tool_call",
+                "tool_name": "check_slot_availability",
+                "arguments": {"date_str": "20/09/2026"},
+                "thought": "Đã có thông tin bảo hành xe. Tiếp theo cần kiểm tra khung giờ trống tại trạm dịch vụ trước khi đặt lịch."
+            }
+
+        if wants_booking and (slot_checked or not wants_history):
+            return {
+                "type": "tool_call",
+                "tool_name": "book_service_appointment",
+                "arguments": {"plate_number": plate_number, "datetime_str": "9:00 20/09/2026", "technician_name": "Trần Văn Hùng"},
+                "thought": f"Đủ điều kiện tiến hành đặt lịch sửa xe {plate_number}. Tôi sẽ gọi tool book_service_appointment."
+            }
+
+        if wants_history and not history_done:
+            return {
+                "type": "tool_call",
+                "tool_name": "check_vehicle_history",
+                "arguments": {"plate_number": plate_number},
+                "thought": f"Người dùng muốn tra cứu tình trạng xe {plate_number}. Tôi sẽ gọi tool check_vehicle_history."
+            }
+
+        if history_done:
+            return {
+                "type": "text",
+                "content": "[Mock Agent Response]: Đây là thông tin bảo hành/lịch sử bảo dưỡng xe đã tra cứu được ở bước trước.",
+                "thought": "Đã có đủ Observation cần thiết, tổng hợp câu trả lời cuối cùng."
+            }
+
+        return {
+            "type": "text",
+            "content": "[Mock Agent Response]: Xin chào! Trạm dịch vụ VinFast nhận bảo dưỡng và sửa chữa tất cả các dòng xe máy điện VinFast, bao gồm kiểm tra pin, phanh và hệ thống điện.",
+            "thought": "Câu hỏi chung về dịch vụ, trả lời trực tiếp không cần gọi Tool."
+        }
 
 
 class GeminiProvider(BaseLLMProvider):
@@ -137,16 +183,17 @@ class GeminiProvider(BaseLLMProvider):
 
 class OpenAIProvider(BaseLLMProvider):
     """OpenAI Provider (Native Tool Calling với OpenAI SDK)"""
-    def __init__(self, api_key: str = None, model: str = None):
+    def __init__(self, api_key: str = None, model: str = None, base_url: str = None):
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.model_name = model or os.getenv("LLM_MODEL") or "gpt-4o-mini"
+        self.base_url = base_url or os.getenv("OPENAI_BASE_URL") or None
 
     def generate(self, prompt: str, system_prompt: str = "") -> str:
         if not self.api_key or self.api_key == "your_openai_api_key_here":
             return "[OpenAI Error]: Chưa cấu hình OPENAI_API_KEY trong file .env! Đang sử dụng chế độ Mock."
         try:
             from openai import OpenAI
-            client = OpenAI(api_key=self.api_key)
+            client = OpenAI(api_key=self.api_key, base_url=self.base_url)
             messages = []
             if system_prompt:
                 messages.append({"role": "system", "content": system_prompt})
@@ -163,7 +210,7 @@ class OpenAIProvider(BaseLLMProvider):
 
         try:
             from openai import OpenAI
-            client = OpenAI(api_key=self.api_key)
+            client = OpenAI(api_key=self.api_key, base_url=self.base_url)
 
             tools = []
             for tool in tools_schema:

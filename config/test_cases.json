@@ -1,0 +1,37 @@
+[
+  {
+    "id": "TC01",
+    "type": "direct_query",
+    "question": "Chào bạn, trạm dịch vụ VinFast nhận bảo dưỡng những dòng xe máy điện nào và có những gói dịch vụ gì?",
+    "expected_behavior": "Chatbot trả lời trực tiếp từ System Prompt, không cần gọi bất kỳ Tool nào.",
+    "complexity": "Low"
+  },
+  {
+    "id": "TC02",
+    "type": "single_tool_query",
+    "question": "Hãy tra cứu lịch sử bảo dưỡng và tình trạng bảo hành của xe máy điện VinFast biển số 29MĐ1-12345.",
+    "expected_behavior": "Agent nhận diện nhu cầu tra cứu, tự động phát sinh Tool Call 'check_vehicle_history' với biển số 29MĐ1-12345.",
+    "complexity": "Medium"
+  },
+  {
+    "id": "TC03",
+    "type": "appointment_booking",
+    "question": "Tôi muốn đặt lịch mang xe 29MĐ1-76623 vào trạm dịch vụ VinFast sửa lúc 9:00 sáng 20/09/2026 với kỹ thuật viên Trần Văn Hùng.",
+    "expected_behavior": "Agent tự động phát sinh Tool Call 'book_service_appointment' với đúng biển số xe, thời gian và tên kỹ thuật viên.",
+    "complexity": "Medium"
+  },
+  {
+    "id": "TC04",
+    "type": "multi_step_reasoning",
+    "question": "Xe 29MĐ1-76623 của tôi còn bảo hành pin không, và nếu khung giờ 9:00 sáng 20/09/2026 tại trạm dịch vụ còn trống thì đặt lịch sửa luôn giúp tôi.",
+    "expected_behavior": "Agent thực hiện chuỗi suy luận ReAct: tra cứu tình trạng bảo hành/pin xe trước (check_vehicle_history), kiểm tra khung giờ trống tại trạm (check_slot_availability), sau đó mới tiến hành đặt lịch (book_service_appointment) nếu khung giờ khả dụng.",
+    "complexity": "High"
+  },
+  {
+    "id": "TC05",
+    "type": "edge_case_handling",
+    "question": "Hãy tra cứu lịch sử bảo dưỡng của xe máy điện biển số 99Z9-99999.",
+    "expected_behavior": "Agent nhận kết quả NOT_FOUND từ Tool và đưa ra phản hồi lịch sự, chính xác không bịa đặt dữ liệu về xe không tồn tại trong hệ thống VinFast.",
+    "complexity": "Medium"
+  }
+]
